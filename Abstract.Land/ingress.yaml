@@ -1,0 +1,53 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: abstract-land-ingress
+spec:
+  rules:
+    - host: abstract.land
+      http:
+        paths:
+          - path: /echo(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: echo-headers-service
+                port:
+                  number: 80
+          - path: /($)?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: base-api-service
+                port:
+                  number: 80
+          - path: /auth(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-api-service
+                port:
+                  number: 80
+          - path: /drive(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: drive-api-service
+                port:
+                  number: 80
+          - path: /kahoot(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: kahoot-proxy-service
+                port:
+                  number: 80
+          - path: /quizizz(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: quizizz-api-service
+                port:
+                  number: 80           

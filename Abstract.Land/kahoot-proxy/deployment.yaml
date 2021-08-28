@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kahoot-proxy
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: kahoot-proxy
+  template:
+    metadata:
+      labels:
+        app: kahoot-proxy
+    spec:
+      containers:
+        - name: kahoot-proxy
+          image: registry.digitalocean.com/rocks-network/kahoot-proxy:v1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

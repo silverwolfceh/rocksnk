@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: base-api
+  template:
+    metadata:
+      labels:
+        app: base-api
+    spec:
+      containers:
+        - name: base-api
+          image: registry.digitalocean.com/rocks-network/base-api:v1.12
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

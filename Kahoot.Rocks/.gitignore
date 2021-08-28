@@ -1,0 +1,4 @@
+.firebase/
+build.ps1
+dist/
+node_modules/

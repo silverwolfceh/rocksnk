@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quizizz-api
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: quizizz-api
+  template:
+    metadata:
+      labels:
+        app: quizizz-api
+    spec:
+      containers:
+        - name: quizizz-api
+          image: registry.digitalocean.com/rocks-network/quizizz-api:v17.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

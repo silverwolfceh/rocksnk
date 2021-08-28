@@ -1,0 +1,358 @@
+{
+  "base_url": "https://abstract.land",
+  "description": "An extensive API made for Rocks Network and other projects by Joder#0006 running on Kubernetes. All request bodies are in JSON, as are response bodies",
+  "deployments": [
+    {
+      "name": "base-api",
+      "path": "/",
+      "routes": [
+        {
+          "path": "/",
+          "method": "GET",
+          "description": "Base route for the api, returns a description of the API"
+        },
+        {
+          "path": "/health",
+          "method": "GET",
+          "description": "Returns 200 with text/plain \"OK\" and open CORS"
+        },
+        {
+          "path": "/encryption/encrypt",
+          "method": "GET",
+          "description": "Returns no string provided error with open CORS"
+        },
+        {
+          "path": "/encryption/encrypt/:message",
+          "method": "GET",
+          "description": "Takes a URL encoded message as input, and returns its encrypted version"
+        },
+        {
+          "path": "/encryption/decrypt",
+          "method": "GET",
+          "description": "Returns no string provided error with open CORS"
+        },
+        {
+          "path": "/encryption/decrypt/:message",
+          "method": "GET",
+          "description": "Takes a URL encoded, encrypted message as input, and returns its decrypted version"
+        }
+      ]
+    },
+    {
+      "name": "echo-request",
+      "path": "/echo",
+      "routes": [
+        {
+          "path": "/",
+          "method": "ALL",
+          "description": "Returns all details about the request. Applies to all sub paths"
+        }
+      ]
+    },
+    {
+      "name": "kahoot-proxy",
+      "path": "/kahoot",
+      "routes": [
+        {
+          "path": "/",
+          "method": "ALL",
+          "description": "CORS proxy for kahoot.it"
+        },
+        {
+          "path": "/apis",
+          "method": "ALL",
+          "description": "CORS proxy for apis.kahoot.it"
+        }
+      ]
+    },
+    {
+      "name": "auth-api",
+      "path": "/auth",
+      "routes": [
+        {
+          "path": "/user",
+          "method": "GET",
+          "description": "Returns details about the current user",
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/user",
+          "method": "POST",
+          "description": "Login endpoint, returns a refresh token cookie and access token header",
+          "body": {
+            "email": "Login email",
+            "password": "Login password"
+          },
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/user",
+          "method": "PUT",
+          "description": "Register endpoint, returns a refresh token cookie and access token header",
+          "body": {
+            "email": "Login email",
+            "password": "Login password"
+          },
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/user/logout",
+          "method": "POST",
+          "description": "Logout endpoint, returns a blank cookie to overwrite the current one"
+        },
+        {
+          "path": "/user",
+          "method": "PATCH",
+          "description": "Change password endpoint, returns a refresh token cookie and access token header",
+          "body": {
+            "password": "New password"
+          },
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/user",
+          "method": "PATCH",
+          "description": "Change password for specified user endpoint, returns a refresh token cookie and access token header",
+          "body": {
+            "email": "Target user's email",
+            "password": "New password"
+          },
+          "headers": {
+            "authorization": "Valid access token"
+          },
+          "permissions": ["USER_ADMIN"]
+        },
+        {
+          "path": "/user",
+          "method": "DELETE",
+          "description": "Delete current user endpoint",
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/user/google",
+          "method": "POST",
+          "description": "Register or login with Google OAuth, returns a refresh token cookie and access token header",
+          "body": {
+            "token": "Google OAuth token"
+          }
+        },
+        {
+          "path": "/user/refresh",
+          "method": "POST",
+          "description": "Checks if refresh token is valid & returns a refresh token cookie and access token header",
+          "cookies": {
+            "ABSTRACT_LAND_REFRESH": "Valid refresh token"
+          }
+        },
+        {
+          "path": "/discord",
+          "method": "GET",
+          "description": "Returns the current set discord ID or null if it's not set",
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/discord/link",
+          "method": "GET",
+          "description": "Uses the specified auth code to link its discord ID to the user's account. Has to be GET because of Discord's OAuth callback",
+          "params": {
+            "code": "Discord OAuth code",
+            "state": "URL encoded JSON object\ntoken: Valid access token\nredirect: Optional redirect URL"
+          }
+        },
+        {
+          "path": "/discord",
+          "method": "DELETE",
+          "description": "Unlinks a discord ID from the user"
+        },
+        {
+          "path": "/permissions",
+          "method": "GET",
+          "description": "Returns all granted permissions for the user",
+          "headers": {
+            "authorization": "Valid access token"
+          }
+        },
+        {
+          "path": "/permissions",
+          "method": "PUT",
+          "description": "Grants the specified permission to the target",
+          "body": {
+            "target": "The email address of the user to grant the permission to",
+            "targetPermission": "The permission to grant"
+          },
+          "permissions": ["PERMISSION_ADMIN"]
+        },
+        {
+          "path": "/permissions",
+          "method": "DELETE",
+          "description": "Deny the specified permission from the target",
+          "body": {
+            "target": "The email address of the user to deny the permission from",
+            "targetPermission": "The permission to deny"
+          },
+          "permissions": ["PERMISSION_ADMIN"]
+        }
+      ]
+    },
+    {
+      "name": "quizizz-api",
+      "path": "/quizizz",
+      "routes": [
+        {
+          "path": "/",
+          "method": "GET",
+          "description": "Get answers for the specified Quiz ID. Must be a short ID (24 characters)",
+          "params": {
+            "quizid": "The short ID of the quiz"
+          }
+        },
+        {
+          "path": "/",
+          "method": "GET",
+          "description": "Get answers for the specified pin",
+          "params": {
+            "pin": "The pin of the game"
+          }
+        },
+        {
+          "path": "/script",
+          "method": "GET",
+          "description": "Returns a script used for getting an answers link as text/plain. Open CORS"
+        }
+      ]
+    },
+    {
+      "name": "drive-api",
+      "path": "/drive",
+      "routes": [
+        {
+          "path": "/files",
+          "method": "GET",
+          "description": "Returns an array of every file in the drive",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_VIEWER permission"
+          }
+        },
+        {
+          "path": "/files",
+          "method": "DELETE",
+          "description": "Delete a file from the drive using it's ID",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_ADMIN permission"
+          },
+          "body": {
+            "fileId": "The fileId of the file to be deleted"
+          }
+        },
+        {
+          "path": "/files/share/",
+          "method": "POST",
+          "description": "Sets the permissions of the given file to be viewable by anyone",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_VIEWER permission"
+          },
+          "body": {
+            "fileId": "The fileId of the file to be shared"
+          }
+        },
+        {
+          "path": "/db",
+          "method": "GET",
+          "description": "Get all films and series with seasons & episodes from the DB",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_VIEWER permission"
+          }
+        },
+        {
+          "path": "/db",
+          "method": "PUT",
+          "description": "Add a media to the DB",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_ADMIN permission"
+          },
+          "body": {
+            "type": "The type of the media. Valid types are film, episode, series",
+            "fileId": "The fileId of the media. Only needed if the media is not a series",
+            "name": "The display name for the media",
+            "image": "A URL to an image for the display cover. Only needed if the media is not an episode",
+            "series": "The index of the series the episode belongs to. Only needed if the media is an episode",
+            "season": "The index of the season the episode belongs to. Only needed if the media is an episode",
+            "episode": "The episode number for the media in the supplied series. Only needed if media is an episode"
+          }
+        },
+        {
+          "path": "/db",
+          "method": "PATCH",
+          "description": "Edit a film, episode or series in the DB",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_ADMIN permission"
+          },
+          "body": {
+            "type": "The type of the media. Valid types are film, episode, series",
+            "id": "The id of the series. Only needed if the media is a series",
+            "fileId": "The fileId of the media. Only needed if the media is not a series",
+            "name": "The display name for the media",
+            "image": "A URL to an image for the display cover. Only needed if the media is not an episode",
+            "series": "The index of the series the episode belongs to. Only needed if the media is an episode",
+            "season": "The index of the season the episode belongs to. Only needed if the media is an episode",
+            "episode": "The episode number for the media in the supplied series. Only needed if media is an episode"
+          }
+        },
+        {
+          "path": "/db",
+          "method": "DELETE",
+          "description": "Delete a film, episode, or series from the DB",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_ADMIN permission"
+          },
+          "body": {
+            "type": "The type of the media to delete. Valid types are film, episode, series",
+            "fileId": "The fileId if the media is a film or episode, or the ID if it is a series"
+          }
+        },
+        {
+          "path": "/suggest",
+          "method":"GET",
+          "description": "Get all drive suggestions",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_VIEWER permission"
+          }
+        },
+        {
+          "path":"/suggest",
+          "method":"PUT",
+          "description": "Add a suggestion",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_VIEWER permission"
+          },
+          "body":{
+            "suggestion": "The suggestion to add"
+          }
+        },
+        {
+          "path":"/suggest",
+          "method":"DELETE",
+          "description": "Delete a suggestion",
+          "headers": {
+            "authorization": "Valid access token with drive DRIVE_ADMIN permission"
+          },
+          "body": {
+            "id": "The id of the suggestion to delete"
+          }
+        }
+      ]
+    }
+  ]
+}
